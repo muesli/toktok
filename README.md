@@ -31,7 +31,7 @@ import (
 )
 
 func main() {
-	// Genrate a new token bucket. Each generated token will be 8 characters long
+	// Generate a new token bucket. Each generated token will be 8 characters long
 	bucket, _ := toktok.NewBucket(8)
 
 	// Generate a bunch of tokens with a safety distance of 4
