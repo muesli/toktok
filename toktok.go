@@ -81,6 +81,30 @@ func (bucket *Bucket) NewToken(distance int) Token {
 	return token
 }
 
+func (bucket *Bucket) Resolve(code string) (Token, int) {
+	var t Token
+	distance := 65536
+
+	for _, token := range bucket.Tokens {
+		if hd := smetrics.WagnerFischer(code, token.Code, 1, 1, 2); hd <= distance {
+			if hd == distance {
+				// duplicate distance, ignore the previous result as it's not unique enough
+				t = Token{}
+			} else {
+				t = token
+				distance = hd
+
+				if distance == 0 {
+					// perfect match
+					break
+				}
+			}
+		}
+	}
+
+	return t, distance
+}
+
 func GenerateToken(n uint, letterRunes []rune) string {
 	l := len(letterRunes)
 	b := make([]rune, n)

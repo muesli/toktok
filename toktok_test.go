@@ -23,3 +23,78 @@ func TestCodeGen(t *testing.T) {
 		t.Errorf("Wrong token length, expected %d, got %d", length, len(tok.Code))
 	}
 }
+
+func TestCodeResolve(t *testing.T) {
+	length := uint(8)
+	bucket, err := NewBucket(length)
+	if err != nil {
+		t.Error("Error creating new token bucket:", err)
+	}
+
+	var tok Token
+	for i := 0; i < 32; i++ {
+		gtok := bucket.NewToken(4)
+		if i == 0 {
+			tok = gtok
+		}
+	}
+
+	ntok, dist := bucket.Resolve(tok.Code)
+	if ntok != tok {
+		t.Errorf("Token mismatch, expected %v, got %v", tok, ntok)
+	}
+	if dist != 0 {
+		t.Errorf("Wrong distance returned, expected 0, got %d", dist)
+	}
+}
+
+func TestCodeFaultyResolve(t *testing.T) {
+	length := uint(8)
+	bucket, err := NewBucket(length)
+	if err != nil {
+		t.Error("Error creating new token bucket:", err)
+	}
+
+	var tok Token
+	var ttok Token
+	for i := 0; i < 32; i++ {
+		gtok := bucket.NewToken(4)
+		if i == 0 {
+			tok = gtok
+			ttok = tok
+		}
+	}
+
+	// replace char in token
+	ttok.Code = " " + ttok.Code[1:]
+
+	ntok, dist := bucket.Resolve(ttok.Code)
+	if ntok != tok {
+		t.Errorf("Token mismatch, expected %v, got %v", tok, ntok)
+	}
+	if dist != 2 {
+		t.Errorf("Wrong distance returned, expected 2, got %d", dist)
+	}
+
+	// insert char in token
+	ttok.Code = tok.Code + " "
+
+	ntok, dist = bucket.Resolve(ttok.Code)
+	if ntok != tok {
+		t.Errorf("Token mismatch, expected %v, got %v", tok, ntok)
+	}
+	if dist != 1 {
+		t.Errorf("Wrong distance returned, expected 1, got %d", dist)
+	}
+
+	// remove char in token
+	ttok.Code = tok.Code[1:]
+
+	ntok, dist = bucket.Resolve(ttok.Code)
+	if ntok != tok {
+		t.Errorf("Token mismatch, expected %v, got %v", tok, ntok)
+	}
+	if dist != 1 {
+		t.Errorf("Wrong distance returned, expected 1, got %d", dist)
+	}
+}
