@@ -1,11 +1,11 @@
 toktok
 ======
 
-Human-friendly token generator.
+A human-friendly token generator
 
-Creates tokens which avoid characters that can be easily misinterpreted, like '1' and 'I' or '8' and 'B'.
-It also compares newly generated tokens to all previously generated ones and guarantees a safety distance
-between the tokens, so they become resilient to typos or other human entry errors.
+Creates tokens which avoid characters that can be easily misinterpreted, like '1' and 'I' or '8' and 'B', as well as
+repeated characters within the token. It also compares newly generated tokens to all previously generated ones and
+guarantees a safety distance between the tokens, so they become resilient to typos or other human entry errors.
 
 ## Installation
 
