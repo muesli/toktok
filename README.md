@@ -48,7 +48,7 @@ func main() {
 
 	// Find the closest match for the faulty token
 	token, distance := bucket.Resolve(code)
-	fmt.Printf("Closest match for '%s' is token '%s' with distance %d\n", code, token.Code, distance)
+	fmt.Printf("Best match for '%s' is token '%s' with distance %d\n", code, token.Code, distance)
 }
 ```
 
