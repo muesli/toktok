@@ -27,6 +27,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/muesli/toktok"
 )
 
@@ -35,19 +36,30 @@ func main() {
 	bucket, _ := toktok.NewBucket(8)
 
 	// Generate a bunch of tokens with a safety distance of 4
-    // Distance is calculated by insertion cost (1), deletion cost (1) and substitution cost (2)
-	for i := 0; i < 10; i++ {
+	// Distance is calculated by insertion cost (1), deletion cost (1) and substitution cost (2)
+	for i := 1; i < 10; i++ {
 		fmt.Printf("Generated Token %d: %s\n", i, bucket.NewToken(4).Code)
 	}
+
+	// One more token that we will tamper with
+	code := bucket.NewToken(4).Code
+	fmt.Printf("Generated Token 10: %s\n", code)
+	code = "_" + code[1:]
+
+	// Find the closest match for the faulty token
+	token, distance := bucket.Resolve(code)
+	fmt.Printf("Closest match for '%s' is token '%s' with distance %d\n", code, token.Code, distance)
 }
 ```
 
 ## Result
 ```
-Generated Token 0: DCN9TEX5
-Generated Token 1: MHBMSXZK
-Generated Token 2: D5HXWX2L
+Generated Token 1: DCN9TEX5
+Generated Token 2: MHBMSXZK
+Generated Token 3: D5HXWX2L
 ...
+Generated Token 10: C2B9ELX4
+Closest match for '_2B9ELX4' is token 'C2B9ELX4' with distance 1
 ```
 
 ## Development
