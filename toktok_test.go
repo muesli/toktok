@@ -11,8 +11,6 @@ import (
 	"testing"
 )
 
-var ()
-
 func TestCodeGen(t *testing.T) {
 	length := uint(8)
 	bucket, err := NewBucket(length)
