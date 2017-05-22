@@ -53,6 +53,10 @@ func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 }
 
 func (bucket *Bucket) NewToken(distance int) Token {
+	if distance < 1 {
+		return Token{}
+	}
+
 	var c string
 	for {
 		c = GenerateToken(bucket.length, bucket.runes)
