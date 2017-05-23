@@ -59,7 +59,7 @@ Generated Token 2: MHBMSXZK
 Generated Token 3: D5HXWX2L
 ...
 Generated Token 10: C2B9ELX4
-Closest match for '_2B9ELX4' is token 'C2B9ELX4' with distance 1
+Closest match for '_2B9ELX4' is token 'C2B9ELX4' with distance 2
 ```
 
 ## Development
