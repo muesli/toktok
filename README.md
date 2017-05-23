@@ -54,12 +54,12 @@ func main() {
 
 ## Result
 ```
-Generated Token 1: DCN9TEX5
-Generated Token 2: MHBMSXZK
-Generated Token 3: D5HXWX2L
+Generated Token 1: AKLM4MXR
+Generated Token 2: EXEXAMHD
+Generated Token 3: R3WX2D2S
 ...
-Generated Token 10: C2B9ELX4
-Closest match for '_2B9ELX4' is token 'C2B9ELX4' with distance 2
+Generated Token 10: XWMXSCSE
+Best match for '_WMXSCSE' is token 'XWMXSCSE' with distance 2
 ```
 
 ## Development
