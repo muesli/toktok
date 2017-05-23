@@ -31,7 +31,7 @@ func NewBucket(tokenLength uint) (Bucket, error) {
 
 	return Bucket{
 		length: tokenLength,
-		runes:  []rune("ABCDEFGHKLMNRSTWXZ234589"),
+		runes:  []rune("ACDEFGHKLMNRSTWXZ23469"),
 		Tokens: make(map[string]Token),
 	}, nil
 }
