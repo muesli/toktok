@@ -25,22 +25,13 @@ type Bucket struct {
 }
 
 func NewBucket(tokenLength uint) (Bucket, error) {
-	if tokenLength < 2 {
-		return Bucket{}, ErrTokenLengthTooSmall
-	}
-
-	return Bucket{
-		length: tokenLength,
-		runes:  []rune("ACDEFGHKLMNRSTWXZ23469"),
-		Tokens: make(map[string]Token),
-	}, nil
+	return NewBucketWithRunes(tokenLength, "ACDEFGHKLMNRSTWXZ23469")
 }
 
 func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	if tokenLength < 2 {
 		return Bucket{}, ErrTokenLengthTooSmall
 	}
-
 	if len(runes) < 4 {
 		return Bucket{}, ErrTooFewRunes
 	}
