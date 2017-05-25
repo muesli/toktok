@@ -24,9 +24,20 @@ func TestCodeGen(t *testing.T) {
 	}
 }
 
+func TestCodeError(t *testing.T) {
+	_, err := NewBucket(1)
+	if err != ErrTokenLengthTooSmall {
+		t.Errorf("Expected error %v, got %v", ErrTokenLengthTooSmall, err)
+	}
+
+	_, err = NewBucketWithRunes(8, "foo")
+	if err != ErrTooFewRunes {
+		t.Errorf("Expected error %v, got %v", ErrTooFewRunes, err)
+	}
+}
+
 func TestCodeResolve(t *testing.T) {
-	length := uint(8)
-	bucket, err := NewBucket(length)
+	bucket, err := NewBucket(8)
 	if err != nil {
 		t.Error("Error creating new token bucket:", err)
 	}
@@ -49,8 +60,7 @@ func TestCodeResolve(t *testing.T) {
 }
 
 func TestCodeFaultyResolve(t *testing.T) {
-	length := uint(8)
-	bucket, err := NewBucket(length)
+	bucket, err := NewBucket(8)
 	if err != nil {
 		t.Error("Error creating new token bucket:", err)
 	}
