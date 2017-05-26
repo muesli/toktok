@@ -9,6 +9,7 @@ package toktok
 
 import (
 	"math/rand"
+	"sync"
 	"time"
 
 	"github.com/xrash/smetrics"
@@ -22,6 +23,8 @@ type Bucket struct {
 	length uint
 	runes  []rune
 	Tokens map[string]Token
+
+	sync.RWMutex
 }
 
 func NewBucket(tokenLength uint) (Bucket, error) {
@@ -47,6 +50,9 @@ func (bucket *Bucket) NewToken(distance int) Token {
 	if distance < 1 {
 		return Token{}
 	}
+
+	bucket.Lock()
+	defer bucket.Unlock()
 
 	var c string
 	for {
@@ -75,6 +81,9 @@ func (bucket *Bucket) NewToken(distance int) Token {
 func (bucket *Bucket) Resolve(code string) (Token, int) {
 	var t Token
 	distance := 65536
+
+	bucket.RLock()
+	defer bucket.RUnlock()
 
 	for _, token := range bucket.Tokens {
 		if hd := smetrics.WagnerFischer(code, token.Code, 1, 1, 2); hd <= distance {
