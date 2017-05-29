@@ -28,7 +28,7 @@ type Bucket struct {
 }
 
 func NewBucket(tokenLength uint) (Bucket, error) {
-	return NewBucketWithRunes(tokenLength, "ACDEFGHKLMNRSTWXZ23469")
+	return NewBucketWithRunes(tokenLength, "ACDEFHJKLMNPRSTUWXYZ23469")
 }
 
 func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
