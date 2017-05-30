@@ -75,16 +75,22 @@ func (bucket *Bucket) NewToken(distance int) Token {
 	}
 	bucket.Tokens[token.Code] = token
 
-	return token
+	return token, i
 }
 
 func (bucket *Bucket) Resolve(code string) (Token, int) {
-	var t Token
 	distance := 65536
 
 	bucket.RLock()
 	defer bucket.RUnlock()
 
+	// try to find a perfect match first
+	t, ok := bucket.Tokens[code]
+	if ok {
+		return t, 0
+	}
+
+	// find the closest match
 	for _, token := range bucket.Tokens {
 		if hd := smetrics.WagnerFischer(code, token.Code, 1, 1, 2); hd <= distance {
 			if hd == distance {
@@ -93,11 +99,6 @@ func (bucket *Bucket) Resolve(code string) (Token, int) {
 			} else {
 				t = token
 				distance = hd
-
-				if distance == 0 {
-					// perfect match
-					break
-				}
 			}
 		}
 	}
