@@ -18,7 +18,10 @@ func TestCodeGen(t *testing.T) {
 		t.Error("Error creating new token bucket:", err)
 	}
 
-	tok := bucket.NewToken(4)
+	tok, err := bucket.NewToken(4)
+	if err != nil {
+		t.Errorf("Unexpected error %v", err)
+	}
 	if len(tok.Code) != int(length) {
 		t.Errorf("Wrong token length, expected %d, got %d", length, len(tok.Code))
 	}
@@ -44,7 +47,10 @@ func TestCodeResolve(t *testing.T) {
 
 	var tok Token
 	for i := 0; i < 32; i++ {
-		gtok := bucket.NewToken(4)
+		gtok, err := bucket.NewToken(4)
+		if err != nil {
+			t.Errorf("Unexpected error %v", err)
+		}
 		if i == 0 {
 			tok = gtok
 		}
@@ -68,7 +74,10 @@ func TestCodeFaultyResolve(t *testing.T) {
 	var tok Token
 	var ttok Token
 	for i := 0; i < 32; i++ {
-		gtok := bucket.NewToken(4)
+		gtok, err := bucket.NewToken(4)
+		if err != nil {
+			t.Errorf("Unexpected error %v", err)
+		}
 		if i == 0 {
 			tok = gtok
 			ttok = tok

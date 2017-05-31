@@ -16,4 +16,8 @@ var (
 	ErrTokenLengthTooSmall = errors.New("Token length is too small")
 	// ErrTooFewRunes gets returned when the set of runes is too small
 	ErrTooFewRunes = errors.New("Not enough runes")
+	// ErrDistanceTooSmall gets returned when the required distance is too small
+	ErrDistanceTooSmall = errors.New("Distance must be at least 1")
+	// ErrTokenSpaceExhausted gets returned when the token space has been exhausted
+	ErrTokenSpaceExhausted = errors.New("Token space exhausted. Use longer tokens, more runes or a smaller distance")
 )

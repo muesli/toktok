@@ -24,6 +24,8 @@ type Bucket struct {
 	runes  []rune
 	Tokens map[string]Token
 
+	tries uint64
+
 	sync.RWMutex
 }
 
@@ -46,16 +48,21 @@ func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	}, nil
 }
 
-func (bucket *Bucket) NewToken(distance int) Token {
+func (bucket *Bucket) NewToken(distance int) (Token, error) {
 	if distance < 1 {
-		return Token{}
+		return Token{}, ErrDistanceTooSmall
+	}
+	if bucket.EstimatedFillPercentage() > 97.0 {
+		return Token{}, ErrTokenSpaceExhausted
 	}
 
 	bucket.Lock()
 	defer bucket.Unlock()
 
 	var c string
+	i := 0
 	for {
+		i++
 		c = GenerateToken(bucket.length, bucket.runes)
 
 		dupe := false
@@ -68,14 +75,18 @@ func (bucket *Bucket) NewToken(distance int) Token {
 		if !dupe {
 			break
 		}
+		if i > 1000 {
+			return Token{}, ErrTokenSpaceExhausted
+		}
 	}
 
 	token := Token{
 		Code: c,
 	}
 	bucket.Tokens[token.Code] = token
+	bucket.tries += uint64(i)
 
-	return token, i
+	return token, nil
 }
 
 func (bucket *Bucket) Resolve(code string) (Token, int) {
@@ -104,6 +115,13 @@ func (bucket *Bucket) Resolve(code string) (Token, int) {
 	}
 
 	return t, distance
+}
+
+func (bucket *Bucket) EstimatedFillPercentage() float64 {
+	bucket.Lock()
+	defer bucket.Unlock()
+
+	return 100.0 - (100.0 / (float64(bucket.tries) / float64(len(bucket.Tokens))))
 }
 
 func GenerateToken(n uint, letterRunes []rune) string {
