@@ -37,29 +37,31 @@ func main() {
 
 	// Generate a bunch of tokens with a safety distance of 4
 	// Distance is calculated by insertion cost (1), deletion cost (1) and substitution cost (2)
-	for i := 1; i < 10; i++ {
-		fmt.Printf("Generated Token %d: %s\n", i, bucket.NewToken(4).Code)
+	for i := 0; i < 9; i++ {
+		token, _ := bucket.NewToken(4)
+		fmt.Printf("Generated Token %d: %s\n", i, token.Code)
 	}
 
 	// One more token that we will tamper with
-	code := bucket.NewToken(4).Code
-	fmt.Printf("Generated Token 10: %s\n", code)
-	code = "_" + code[1:]
+	token, _ := bucket.NewToken(4)
+	fmt.Printf("Generated Token 9: %s\n", token.Code)
+	token.Code = "_" + token.Code[1:7] + "_"
 
 	// Find the closest match for the faulty token
-	token, distance := bucket.Resolve(code)
-	fmt.Printf("Best match for '%s' is token '%s' with distance %d\n", code, token.Code, distance)
+	match, distance := bucket.Resolve(token.Code)
+	fmt.Printf("Best match for '%s' is token '%s' with distance %d\n", token.Code, match.Code, distance)
+}
 }
 ```
 
 ## Result
 ```
-Generated Token 1: AKLM4MXR
-Generated Token 2: EXEXAMHD
-Generated Token 3: R3WX2D2S
+Generated Token 0: J3KPC9YF
+Generated Token 1: PXTWDC9P
+Generated Token 2: WNANK4FU
 ...
-Generated Token 10: XWMXSCSE
-Best match for '_WMXSCSE' is token 'XWMXSCSE' with distance 2
+Generated Token 9: Y3NCDFWN
+Best match for '_3NCDFW_' is token 'Y3NCDFWN' with distance 4
 ```
 
 ## Development
