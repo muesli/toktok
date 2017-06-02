@@ -51,7 +51,6 @@ func main() {
 	match, distance := bucket.Resolve(token.Code)
 	fmt.Printf("Best match for '%s' is token '%s' with distance %d\n", token.Code, match.Code, distance)
 }
-}
 ```
 
 ## Result
