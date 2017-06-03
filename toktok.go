@@ -126,6 +126,15 @@ func (bucket *Bucket) Resolve(code string) (Token, int) {
 	return t, distance
 }
 
+// Count returns how many tokens are currently in this Bucket
+func (bucket *Bucket) Count() uint64 {
+	bucket.Lock()
+	defer bucket.Unlock()
+
+	return uint64(len(bucket.tokens))
+}
+
+// EstimatedFillPercentage returns how full the Bucket approximately is
 func (bucket *Bucket) EstimatedFillPercentage() float64 {
 	bucket.Lock()
 	defer bucket.Unlock()
