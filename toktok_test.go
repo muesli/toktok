@@ -52,8 +52,8 @@ func TestTokenLoad(t *testing.T) {
 }
 
 func TestTokenEstimations(t *testing.T) {
-	bucket, _ := NewBucket(6)
-	for i := 0; i < 256; i++ {
+	bucket, _ := NewBucket(7)
+	for i := 0; i < 5001; i++ {
 		bucket.NewToken(4)
 	}
 
@@ -73,10 +73,20 @@ func TestTokenError(t *testing.T) {
 		t.Errorf("Expected error %v, got %v", ErrTooFewRunes, err)
 	}
 
-	bucket, _ := NewBucket(8)
+	bucket, _ := NewBucket(4)
 	_, err = bucket.NewToken(0)
 	if err != ErrDistanceTooSmall {
 		t.Errorf("Expected error %v, got %v", ErrDistanceTooSmall, err)
+	}
+
+	for i := 0; i < 256; i++ {
+		_, err = bucket.NewToken(4)
+		if err != nil {
+			break
+		}
+	}
+	if err != ErrTokenSpaceExhausted {
+		t.Errorf("Expected error %v, got %v", ErrTokenSpaceExhausted, err)
 	}
 }
 
