@@ -59,9 +59,6 @@ func (bucket *Bucket) NewToken(distance int) (string, error) {
 	if distance < 1 {
 		return "", ErrDistanceTooSmall
 	}
-	if bucket.EstimatedFillPercentage() > 95.0 {
-		return "", ErrTokenSpaceExhausted
-	}
 
 	bucket.Lock()
 	defer bucket.Unlock()
