@@ -30,6 +30,21 @@ func TestCodeGen(t *testing.T) {
 	}
 }
 
+func TestCodeLoad(t *testing.T) {
+	code1, code2 := "ABCDEFGH", "IJKLMNOP"
+	tokens := []string{code1, code2}
+	bucket, _ := NewBucket(8)
+	bucket.LoadTokens(tokens)
+
+	if bucket.Count() != 2 {
+		t.Errorf("Expected Count() to return 2, got %d", bucket.Count())
+	}
+	tok, _ := bucket.Resolve(code1)
+	if tok.Code != code1 {
+		t.Errorf("Expected Token '%s', got '%s'", code1, tok.Code)
+	}
+}
+
 func TestCodeError(t *testing.T) {
 	_, err := NewBucket(1)
 	if err != ErrTokenLengthTooSmall {

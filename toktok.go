@@ -51,6 +51,16 @@ func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	}, nil
 }
 
+// LoadTokens adds previously generated tokens to the Bucket
+func (bucket *Bucket) LoadTokens(tokens []string) {
+	for _, v := range tokens {
+		token := Token{
+			Code: v,
+		}
+		bucket.tokens[token.Code] = token
+	}
+}
+
 // NewToken returns a new token with a minimal safety distance to all other existing tokens
 func (bucket *Bucket) NewToken(distance int) (Token, error) {
 	if distance < 1 {
