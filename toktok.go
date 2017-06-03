@@ -15,16 +15,12 @@ import (
 	"github.com/xrash/smetrics"
 )
 
-type Token struct {
-	Code string
-}
-
 // Bucket tracks all the generated tokens and lets you create new, unique tokens
 type Bucket struct {
 	length uint
 	runes  []rune
 
-	tokens map[string]Token
+	tokens map[string]bool
 	tries  []uint64
 
 	sync.RWMutex
@@ -47,27 +43,24 @@ func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	return Bucket{
 		length: tokenLength,
 		runes:  []rune(runes),
-		tokens: make(map[string]Token),
+		tokens: make(map[string]bool),
 	}, nil
 }
 
 // LoadTokens adds previously generated tokens to the Bucket
 func (bucket *Bucket) LoadTokens(tokens []string) {
 	for _, v := range tokens {
-		token := Token{
-			Code: v,
-		}
-		bucket.tokens[token.Code] = token
+		bucket.tokens[v] = true
 	}
 }
 
 // NewToken returns a new token with a minimal safety distance to all other existing tokens
-func (bucket *Bucket) NewToken(distance int) (Token, error) {
+func (bucket *Bucket) NewToken(distance int) (string, error) {
 	if distance < 1 {
-		return Token{}, ErrDistanceTooSmall
+		return "", ErrDistanceTooSmall
 	}
 	if bucket.EstimatedFillPercentage() > 95.0 {
-		return Token{}, ErrTokenSpaceExhausted
+		return "", ErrTokenSpaceExhausted
 	}
 
 	bucket.Lock()
@@ -80,8 +73,8 @@ func (bucket *Bucket) NewToken(distance int) (Token, error) {
 		c = GenerateToken(bucket.length, bucket.runes)
 
 		dupe := false
-		for _, token := range bucket.tokens {
-			if hd := smetrics.WagnerFischer(c, token.Code, 1, 1, 2); hd <= distance {
+		for token, _ := range bucket.tokens {
+			if hd := smetrics.WagnerFischer(c, token, 1, 1, 2); hd <= distance {
 				dupe = true
 				break
 			}
@@ -90,42 +83,40 @@ func (bucket *Bucket) NewToken(distance int) (Token, error) {
 			break
 		}
 		if i > 100 {
-			return Token{}, ErrTokenSpaceExhausted
+			return "", ErrTokenSpaceExhausted
 		}
 	}
 
-	token := Token{
-		Code: c,
-	}
-	bucket.tokens[token.Code] = token
+	bucket.tokens[c] = true
 
 	bucket.tries = append(bucket.tries, uint64(i))
 	if len(bucket.tries) > 5000 {
 		bucket.tries = bucket.tries[1:]
 	}
 
-	return token, nil
+	return c, nil
 }
 
 // Resolve tries to find the matching original token for a potentially corrupted token
-func (bucket *Bucket) Resolve(code string) (Token, int) {
+func (bucket *Bucket) Resolve(code string) (string, int) {
 	distance := 65536
 
 	bucket.RLock()
 	defer bucket.RUnlock()
 
 	// try to find a perfect match first
-	t, ok := bucket.tokens[code]
+	_, ok := bucket.tokens[code]
 	if ok {
-		return t, 0
+		return code, 0
 	}
 
+	var t string
 	// find the closest match
-	for _, token := range bucket.tokens {
-		if hd := smetrics.WagnerFischer(code, token.Code, 1, 1, 2); hd <= distance {
+	for token, _ := range bucket.tokens {
+		if hd := smetrics.WagnerFischer(code, token, 1, 1, 2); hd <= distance {
 			if hd == distance {
 				// duplicate distance, ignore the previous result as it's not unique enough
-				t = Token{}
+				t = ""
 			} else {
 				t = token
 				distance = hd

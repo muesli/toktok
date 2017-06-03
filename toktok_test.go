@@ -22,8 +22,8 @@ func TestCodeGen(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unexpected error %v", err)
 	}
-	if len(tok.Code) != int(length) {
-		t.Errorf("Wrong token length, expected %d, got %d", length, len(tok.Code))
+	if len(tok) != int(length) {
+		t.Errorf("Wrong token length, expected %d, got %d", length, len(tok))
 	}
 }
 
@@ -46,8 +46,8 @@ func TestCodeLoad(t *testing.T) {
 		t.Errorf("Expected Count() to return 2, got %d", bucket.Count())
 	}
 	tok, _ := bucket.Resolve(code1)
-	if tok.Code != code1 {
-		t.Errorf("Expected Token '%s', got '%s'", code1, tok.Code)
+	if tok != code1 {
+		t.Errorf("Expected Token '%s', got '%s'", code1, tok)
 	}
 }
 
@@ -72,7 +72,7 @@ func TestCodeError(t *testing.T) {
 func TestCodeResolve(t *testing.T) {
 	bucket, _ := NewBucket(8)
 
-	var tok Token
+	var tok string
 	for i := 0; i < 32; i++ {
 		gtok, err := bucket.NewToken(4)
 		if err != nil {
@@ -83,7 +83,7 @@ func TestCodeResolve(t *testing.T) {
 		}
 	}
 
-	ntok, dist := bucket.Resolve(tok.Code)
+	ntok, dist := bucket.Resolve(tok)
 	if ntok != tok {
 		t.Errorf("Token mismatch, expected %v, got %v", tok, ntok)
 	}
@@ -95,8 +95,7 @@ func TestCodeResolve(t *testing.T) {
 func TestCodeFaultyResolve(t *testing.T) {
 	bucket, _ := NewBucket(8)
 
-	var tok Token
-	var ttok Token
+	var tok, ttok string
 	for i := 0; i < 32; i++ {
 		gtok, err := bucket.NewToken(4)
 		if err != nil {
@@ -109,9 +108,9 @@ func TestCodeFaultyResolve(t *testing.T) {
 	}
 
 	// replace char in token
-	ttok.Code = " " + ttok.Code[1:]
+	ttok = " " + ttok[1:]
 
-	ntok, dist := bucket.Resolve(ttok.Code)
+	ntok, dist := bucket.Resolve(ttok)
 	if ntok != tok {
 		t.Errorf("Token mismatch, expected %v, got %v", tok, ntok)
 	}
@@ -120,9 +119,9 @@ func TestCodeFaultyResolve(t *testing.T) {
 	}
 
 	// insert char in token
-	ttok.Code = tok.Code + " "
+	ttok = tok + " "
 
-	ntok, dist = bucket.Resolve(ttok.Code)
+	ntok, dist = bucket.Resolve(ttok)
 	if ntok != tok {
 		t.Errorf("Token mismatch, expected %v, got %v", tok, ntok)
 	}
@@ -131,9 +130,9 @@ func TestCodeFaultyResolve(t *testing.T) {
 	}
 
 	// remove char in token
-	ttok.Code = tok.Code[1:]
+	ttok = tok[1:]
 
-	ntok, dist = bucket.Resolve(ttok.Code)
+	ntok, dist = bucket.Resolve(ttok)
 	if ntok != tok {
 		t.Errorf("Token mismatch, expected %v, got %v", tok, ntok)
 	}
