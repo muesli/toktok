@@ -22,9 +22,9 @@ type Token struct {
 type Bucket struct {
 	length uint
 	runes  []rune
-	Tokens map[string]Token
 
-	tries uint64
+	tokens map[string]Token
+	tries  []uint64
 
 	sync.RWMutex
 }
@@ -44,7 +44,7 @@ func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	return Bucket{
 		length: tokenLength,
 		runes:  []rune(runes),
-		Tokens: make(map[string]Token),
+		tokens: make(map[string]Token),
 	}, nil
 }
 
@@ -66,7 +66,7 @@ func (bucket *Bucket) NewToken(distance int) (Token, error) {
 		c = GenerateToken(bucket.length, bucket.runes)
 
 		dupe := false
-		for _, token := range bucket.Tokens {
+		for _, token := range bucket.tokens {
 			if hd := smetrics.WagnerFischer(c, token.Code, 1, 1, 2); hd <= distance {
 				dupe = true
 				break
@@ -83,8 +83,12 @@ func (bucket *Bucket) NewToken(distance int) (Token, error) {
 	token := Token{
 		Code: c,
 	}
-	bucket.Tokens[token.Code] = token
-	bucket.tries += uint64(i)
+	bucket.tokens[token.Code] = token
+
+	bucket.tries = append(bucket.tries, uint64(i))
+	if len(bucket.tries) > 5000 {
+		bucket.tries = bucket.tries[1:]
+	}
 
 	return token, nil
 }
@@ -96,13 +100,13 @@ func (bucket *Bucket) Resolve(code string) (Token, int) {
 	defer bucket.RUnlock()
 
 	// try to find a perfect match first
-	t, ok := bucket.Tokens[code]
+	t, ok := bucket.tokens[code]
 	if ok {
 		return t, 0
 	}
 
 	// find the closest match
-	for _, token := range bucket.Tokens {
+	for _, token := range bucket.tokens {
 		if hd := smetrics.WagnerFischer(code, token.Code, 1, 1, 2); hd <= distance {
 			if hd == distance {
 				// duplicate distance, ignore the previous result as it's not unique enough
@@ -121,7 +125,21 @@ func (bucket *Bucket) EstimatedFillPercentage() float64 {
 	bucket.Lock()
 	defer bucket.Unlock()
 
-	return 100.0 - (100.0 / (float64(bucket.tries) / float64(len(bucket.Tokens))))
+	if len(bucket.tries) == 0 {
+		return 0
+	}
+
+	tries := uint64(0)
+	for _, v := range bucket.tries {
+		tries += v
+	}
+
+	return 100.0 - (100.0 / (float64(tries) / float64(len(bucket.tries))))
+}
+
+// EstimatedTokenSpace returns the total estimated token space available in this Bucket
+func (bucket *Bucket) EstimatedTokenSpace() uint64 {
+	return uint64(float64(bucket.Count()) * (100.0 / bucket.EstimatedFillPercentage()))
 }
 
 func GenerateToken(n uint, letterRunes []rune) string {
