@@ -19,6 +19,7 @@ type Token struct {
 	Code string
 }
 
+// Bucket tracks all the generated tokens and lets you create new, unique tokens
 type Bucket struct {
 	length uint
 	runes  []rune
@@ -29,10 +30,12 @@ type Bucket struct {
 	sync.RWMutex
 }
 
+// NewBucket returns a new bucket, which will contain tokens of tokenLength
 func NewBucket(tokenLength uint) (Bucket, error) {
 	return NewBucketWithRunes(tokenLength, "ACDEFHJKLMNPRSTUWXY3469")
 }
 
+// NewBucketWithRunes returns a new bucket and let's you define which runes will be used for token generation
 func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	if tokenLength < 2 {
 		return Bucket{}, ErrTokenLengthTooSmall
@@ -48,6 +51,7 @@ func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	}, nil
 }
 
+// NewToken returns a new token with a minimal safety distance to all other existing tokens
 func (bucket *Bucket) NewToken(distance int) (Token, error) {
 	if distance < 1 {
 		return Token{}, ErrDistanceTooSmall
@@ -93,6 +97,7 @@ func (bucket *Bucket) NewToken(distance int) (Token, error) {
 	return token, nil
 }
 
+// Resolve tries to find the matching original token for a potentially corrupted token
 func (bucket *Bucket) Resolve(code string) (Token, int) {
 	distance := 65536
 
@@ -142,6 +147,7 @@ func (bucket *Bucket) EstimatedTokenSpace() uint64 {
 	return uint64(float64(bucket.Count()) * (100.0 / bucket.EstimatedFillPercentage()))
 }
 
+// GenerateToken generates a new token of length n with the defined rune-set letterRunes
 func GenerateToken(n uint, letterRunes []rune) string {
 	l := len(letterRunes)
 	b := make([]rune, n)
