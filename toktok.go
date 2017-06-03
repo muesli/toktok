@@ -56,7 +56,7 @@ func (bucket *Bucket) NewToken(distance int) (Token, error) {
 	if distance < 1 {
 		return Token{}, ErrDistanceTooSmall
 	}
-	if bucket.EstimatedFillPercentage() > 97.0 {
+	if bucket.EstimatedFillPercentage() > 95.0 {
 		return Token{}, ErrTokenSpaceExhausted
 	}
 
@@ -79,7 +79,7 @@ func (bucket *Bucket) NewToken(distance int) (Token, error) {
 		if !dupe {
 			break
 		}
-		if i > 1000 {
+		if i > 100 {
 			return Token{}, ErrTokenSpaceExhausted
 		}
 	}
