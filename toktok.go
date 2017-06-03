@@ -20,8 +20,9 @@ type Bucket struct {
 	length uint
 	runes  []rune
 
-	tokens map[string]bool
-	tries  []uint64
+	tokens     map[string]bool
+	tries      []uint64
+	triesCache uint64
 
 	sync.RWMutex
 }
@@ -90,7 +91,9 @@ func (bucket *Bucket) NewToken(distance int) (string, error) {
 	bucket.tokens[c] = true
 
 	bucket.tries = append(bucket.tries, uint64(i))
+	bucket.triesCache += uint64(i)
 	if len(bucket.tries) > 5000 {
+		bucket.triesCache -= bucket.tries[0]
 		bucket.tries = bucket.tries[1:]
 	}
 
@@ -144,12 +147,7 @@ func (bucket *Bucket) EstimatedFillPercentage() float64 {
 		return 0
 	}
 
-	tries := uint64(0)
-	for _, v := range bucket.tries {
-		tries += v
-	}
-
-	return 100.0 - (100.0 / (float64(tries) / float64(len(bucket.tries))))
+	return 100.0 - (100.0 / (float64(bucket.triesCache) / float64(len(bucket.tries))))
 }
 
 // EstimatedTokenSpace returns the total estimated token space available in this Bucket
