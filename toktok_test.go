@@ -51,6 +51,17 @@ func TestTokenLoad(t *testing.T) {
 	}
 }
 
+func TestTokenEstimations(t *testing.T) {
+	bucket, _ := NewBucket(6)
+	for i := 0; i < 256; i++ {
+		bucket.NewToken(4)
+	}
+
+	if bucket.EstimatedTokenSpace() <= 0 {
+		t.Errorf("Expected positive token space estimate, got %d", bucket.EstimatedTokenSpace())
+	}
+}
+
 func TestTokenError(t *testing.T) {
 	_, err := NewBucket(1)
 	if err != ErrTokenLengthTooSmall {
