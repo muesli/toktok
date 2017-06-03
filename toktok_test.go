@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestCodeGen(t *testing.T) {
+func TestTokenGen(t *testing.T) {
 	length := uint(8)
 	bucket, err := NewBucket(length)
 	if err != nil {
@@ -27,7 +27,7 @@ func TestCodeGen(t *testing.T) {
 	}
 }
 
-func TestCodeCount(t *testing.T) {
+func TestTokenCount(t *testing.T) {
 	bucket, _ := NewBucket(8)
 	bucket.NewToken(1)
 
@@ -36,7 +36,7 @@ func TestCodeCount(t *testing.T) {
 	}
 }
 
-func TestCodeLoad(t *testing.T) {
+func TestTokenLoad(t *testing.T) {
 	code1, code2 := "ABCDEFGH", "IJKLMNOP"
 	tokens := []string{code1, code2}
 	bucket, _ := NewBucket(8)
@@ -51,7 +51,7 @@ func TestCodeLoad(t *testing.T) {
 	}
 }
 
-func TestCodeError(t *testing.T) {
+func TestTokenError(t *testing.T) {
 	_, err := NewBucket(1)
 	if err != ErrTokenLengthTooSmall {
 		t.Errorf("Expected error %v, got %v", ErrTokenLengthTooSmall, err)
@@ -69,7 +69,7 @@ func TestCodeError(t *testing.T) {
 	}
 }
 
-func TestCodeResolve(t *testing.T) {
+func TestTokenResolve(t *testing.T) {
 	bucket, _ := NewBucket(8)
 
 	var tok string
@@ -92,7 +92,7 @@ func TestCodeResolve(t *testing.T) {
 	}
 }
 
-func TestCodeFaultyResolve(t *testing.T) {
+func TestTokenFaultyResolve(t *testing.T) {
 	bucket, _ := NewBucket(8)
 
 	var tok, ttok string
