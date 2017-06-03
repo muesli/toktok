@@ -70,7 +70,7 @@ func (bucket *Bucket) NewToken(distance int) (string, error) {
 		c = GenerateToken(bucket.length, bucket.runes)
 
 		dupe := false
-		for token, _ := range bucket.tokens {
+		for token := range bucket.tokens {
 			if hd := smetrics.WagnerFischer(c, token, 1, 1, 2); hd <= distance {
 				dupe = true
 				break
@@ -109,7 +109,7 @@ func (bucket *Bucket) Resolve(code string) (string, int) {
 
 	var t string
 	// find the closest match
-	for token, _ := range bucket.tokens {
+	for token := range bucket.tokens {
 		if hd := smetrics.WagnerFischer(code, token, 1, 1, 2); hd <= distance {
 			if hd == distance {
 				// duplicate distance, ignore the previous result as it's not unique enough
