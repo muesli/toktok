@@ -25,6 +25,12 @@ func TestCodeGen(t *testing.T) {
 	if len(tok.Code) != int(length) {
 		t.Errorf("Wrong token length, expected %d, got %d", length, len(tok.Code))
 	}
+}
+
+func TestCodeCount(t *testing.T) {
+	bucket, _ := NewBucket(8)
+	bucket.NewToken(1)
+
 	if bucket.Count() != 1 {
 		t.Errorf("Expected Count() to return 1, got %d", bucket.Count())
 	}
