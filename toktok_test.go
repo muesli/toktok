@@ -53,10 +53,17 @@ func TestTokenLoad(t *testing.T) {
 
 func TestTokenEstimations(t *testing.T) {
 	bucket, _ := NewBucket(7)
+	if bucket.EstimatedFillPercentage() != 0 {
+		t.Errorf("Expected zero fill-rate estimate, got %f", bucket.EstimatedFillPercentage())
+	}
+
 	for i := 0; i < 5001; i++ {
 		bucket.NewToken(4)
 	}
 
+	if bucket.EstimatedFillPercentage() <= 0 {
+		t.Errorf("Expected positive fill-rate estimate, got %f", bucket.EstimatedFillPercentage())
+	}
 	if bucket.EstimatedTokenSpace() <= 0 {
 		t.Errorf("Expected positive token space estimate, got %d", bucket.EstimatedTokenSpace())
 	}
