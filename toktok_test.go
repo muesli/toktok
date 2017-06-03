@@ -40,13 +40,16 @@ func TestCodeError(t *testing.T) {
 	if err != ErrTooFewRunes {
 		t.Errorf("Expected error %v, got %v", ErrTooFewRunes, err)
 	}
+
+	bucket, _ := NewBucket(8)
+	_, err = bucket.NewToken(0)
+	if err != ErrDistanceTooSmall {
+		t.Errorf("Expected error %v, got %v", ErrDistanceTooSmall, err)
+	}
 }
 
 func TestCodeResolve(t *testing.T) {
-	bucket, err := NewBucket(8)
-	if err != nil {
-		t.Error("Error creating new token bucket:", err)
-	}
+	bucket, _ := NewBucket(8)
 
 	var tok Token
 	for i := 0; i < 32; i++ {
@@ -69,10 +72,7 @@ func TestCodeResolve(t *testing.T) {
 }
 
 func TestCodeFaultyResolve(t *testing.T) {
-	bucket, err := NewBucket(8)
-	if err != nil {
-		t.Error("Error creating new token bucket:", err)
-	}
+	bucket, _ := NewBucket(8)
 
 	var tok Token
 	var ttok Token
