@@ -49,6 +49,9 @@ func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 
 // LoadTokens adds previously generated tokens to the Bucket
 func (bucket *Bucket) LoadTokens(tokens []string) {
+	bucket.Lock()
+	defer bucket.Unlock()
+
 	for _, v := range tokens {
 		bucket.tokens[v] = true
 	}
