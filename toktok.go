@@ -63,29 +63,13 @@ func (bucket *Bucket) NewToken(distance int) (string, error) {
 		return "", ErrDistanceTooSmall
 	}
 
+	c, i, err := bucket.generate(distance)
+	if err != nil {
+		return "", err
+	}
+
 	bucket.Lock()
 	defer bucket.Unlock()
-
-	var c string
-	i := 0
-	for {
-		i++
-		c = GenerateToken(bucket.length, bucket.runes)
-
-		dupe := false
-		for token := range bucket.tokens {
-			if hd := smetrics.WagnerFischer(c, token, 1, 1, 2); hd <= distance {
-				dupe = true
-				break
-			}
-		}
-		if !dupe {
-			break
-		}
-		if i > 100 {
-			return "", ErrTokenSpaceExhausted
-		}
-	}
 
 	bucket.tokens[c] = true
 
@@ -155,6 +139,35 @@ func (bucket *Bucket) EstimatedFillPercentage() float64 {
 // EstimatedTokenSpace returns the total estimated token space available in this Bucket
 func (bucket *Bucket) EstimatedTokenSpace() uint64 {
 	return uint64(float64(bucket.Count()) * (100.0 / bucket.EstimatedFillPercentage()))
+}
+
+func (bucket *Bucket) generate(distance int) (string, int, error) {
+	bucket.RLock()
+	defer bucket.RUnlock()
+
+	var c string
+	i := 0
+	for {
+		i++
+		if i == 100 {
+			return "", i, ErrTokenSpaceExhausted
+		}
+
+		c = GenerateToken(bucket.length, bucket.runes)
+
+		dupe := false
+		for token := range bucket.tokens {
+			if hd := smetrics.WagnerFischer(c, token, 1, 1, 2); hd <= distance {
+				dupe = true
+				break
+			}
+		}
+		if !dupe {
+			break
+		}
+	}
+
+	return c, i, nil
 }
 
 // GenerateToken generates a new token of length n with the defined rune-set letterRunes
