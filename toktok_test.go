@@ -168,3 +168,11 @@ func TestTokenFaultyResolve(t *testing.T) {
 		t.Errorf("Wrong distance returned, expected 1, got %d", dist)
 	}
 }
+
+func BenchmarkCodeGen(b *testing.B) {
+	bucket, _ := NewBucket(8)
+
+	for i := 0; i < b.N; i++ {
+		bucket.NewToken(4)
+	}
+}
