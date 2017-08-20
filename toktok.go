@@ -20,7 +20,7 @@ type Bucket struct {
 	length uint
 	runes  []rune
 
-	tokens map[string]bool
+	tokens map[string]struct{}
 	tries  []uint64
 
 	sync.RWMutex
@@ -43,7 +43,7 @@ func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	return Bucket{
 		length: tokenLength,
 		runes:  []rune(runes),
-		tokens: make(map[string]bool),
+		tokens: make(map[string]struct{}),
 	}, nil
 }
 
@@ -53,7 +53,7 @@ func (bucket *Bucket) LoadTokens(tokens []string) {
 	defer bucket.Unlock()
 
 	for _, v := range tokens {
-		bucket.tokens[v] = true
+		bucket.tokens[v] = struct{}{}
 	}
 }
 
@@ -71,7 +71,7 @@ func (bucket *Bucket) NewToken(distance int) (string, error) {
 	bucket.Lock()
 	defer bucket.Unlock()
 
-	bucket.tokens[c] = true
+	bucket.tokens[c] = struct{}{}
 
 	bucket.tries = append(bucket.tries, uint64(i))
 	if len(bucket.tries) > 5000 {
