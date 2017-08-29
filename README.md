@@ -67,6 +67,6 @@ Best match for '_3NCDFW_' is token 'Y3NCDFWN' with distance 4
 
 API docs can be found [here](http://godoc.org/github.com/muesli/toktok).
 
-[![Build Status](https://secure.travis-ci.org/muesli/toktok.png)](http://travis-ci.org/muesli/toktok)
+[![Build Status](https://travis-ci.org/muesli/toktok.svg?branch=master)](https://travis-ci.org/muesli/toktok)
 [![Coverage Status](https://coveralls.io/repos/github/muesli/toktok/badge.svg?branch=master)](https://coveralls.io/github/muesli/toktok?branch=master)
 [![Go ReportCard](http://goreportcard.com/badge/muesli/toktok)](http://goreportcard.com/report/muesli/toktok)
