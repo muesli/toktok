@@ -9,6 +9,7 @@ package toktok
 
 import (
 	"math/rand"
+	"strings"
 	"sync"
 	"time"
 
@@ -33,6 +34,13 @@ func NewBucket(tokenLength uint) (Bucket, error) {
 
 // NewBucketWithRunes returns a new bucket and let's you define which runes will be used for token generation
 func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
+	runes = strings.ToUpper(runes)
+	for _, r := range runes {
+		if strings.Count(runes, string(r)) > 1 {
+			return Bucket{}, ErrDupeRunes
+		}
+	}
+
 	if tokenLength < 2 {
 		return Bucket{}, ErrTokenLengthTooSmall
 	}
@@ -88,6 +96,7 @@ func (bucket *Bucket) Resolve(code string) (string, int) {
 	bucket.RLock()
 	defer bucket.RUnlock()
 
+	code = strings.ToUpper(code)
 	// try to find a perfect match first
 	_, ok := bucket.tokens[code]
 	if ok {

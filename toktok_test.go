@@ -8,6 +8,7 @@
 package toktok
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -75,9 +76,14 @@ func TestTokenError(t *testing.T) {
 		t.Errorf("Expected error %v, got %v", ErrTokenLengthTooSmall, err)
 	}
 
-	_, err = NewBucketWithRunes(8, "foo")
+	_, err = NewBucketWithRunes(8, "ABC")
 	if err != ErrTooFewRunes {
 		t.Errorf("Expected error %v, got %v", ErrTooFewRunes, err)
+	}
+
+	_, err = NewBucketWithRunes(8, "ABCDabcd")
+	if err != ErrDupeRunes {
+		t.Errorf("Expected error %v, got %v", ErrDupeRunes, err)
 	}
 
 	bucket, _ := NewBucket(4)
@@ -114,6 +120,14 @@ func TestTokenResolve(t *testing.T) {
 	ntok, dist := bucket.Resolve(tok)
 	if ntok != tok {
 		t.Errorf("Token mismatch, expected %v, got %v", tok, ntok)
+	}
+	if dist != 0 {
+		t.Errorf("Wrong distance returned, expected 0, got %d", dist)
+	}
+
+	ntok, dist = bucket.Resolve(strings.ToLower(tok))
+	if ntok != tok {
+		t.Errorf("Lowercase token mismatch, expected %v, got %v", tok, ntok)
 	}
 	if dist != 0 {
 		t.Errorf("Wrong distance returned, expected 0, got %d", dist)
