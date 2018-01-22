@@ -13,12 +13,11 @@ go:
   - tip
 
 before_install:
-  - go get github.com/axw/gocov/gocov
-  - go get github.com/mattn/goveralls
+  - if [[ $TRAVIS_GO_VERSION == 1.9* ]]; then go get github.com/axw/gocov/gocov github.com/mattn/goveralls; fi
 
 script:
   - go test -v -tags ci ./...
-  - $GOPATH/bin/goveralls -service=travis-ci -ignore="examples/tokens/tokens.go,examples/space/space.go"
+  - if [[ $TRAVIS_GO_VERSION == 1.9* ]]; then $GOPATH/bin/goveralls -service=travis-ci -ignore="examples/tokens/tokens.go,examples/space/space.go"; fi
 
 notifications:
   email:
