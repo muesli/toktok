@@ -17,7 +17,7 @@ before_install:
 
 script:
   - while true; do echo "..."; sleep 60; done &
-  - go test -v -tags ci ./...
+  - go test -v -tags ci -timeout 1h ./...
   - if [[ $TRAVIS_GO_VERSION == 1.9* ]]; then $GOPATH/bin/goveralls -service=travis-ci -ignore="examples/tokens/tokens.go,examples/space/space.go"; fi
 
 notifications:
