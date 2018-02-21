@@ -5,15 +5,18 @@ os:
   - osx
 
 go:
+  - 1.5.x
+  - 1.6.x
   - 1.7.x
   - 1.8.x
   - 1.9.x
   - tip
 
 matrix:
-    include:
-        - os: linux
+    exclude:
+        - os: osx
           go: 1.5.x
+        - os: osx
           go: 1.6.x
 
 before_install:
