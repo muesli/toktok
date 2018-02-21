@@ -13,9 +13,8 @@ go:
 matrix:
     include:
         - os: linux
-          go:
-            - 1.5.x
-            - 1.6.x
+          go: 1.5.x
+          go: 1.6.x
 
 before_install:
   - if [[ $TRAVIS_GO_VERSION == 1.9* ]]; then go get github.com/axw/gocov/gocov github.com/mattn/goveralls; fi
