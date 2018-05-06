@@ -21,12 +21,11 @@ matrix:
           go: 1.6.x
 
 before_install:
-  - if [[ $TRAVIS_GO_VERSION == 1.9* ]]; then go get github.com/axw/gocov/gocov github.com/mattn/goveralls; fi
+  - if [[ $TRAVIS_GO_VERSION == 1.10* ]]; then go get github.com/axw/gocov/gocov github.com/mattn/goveralls; fi
 
 script:
-  - while true; do echo "..."; sleep 60; done &
-  - go test -v -tags ci -timeout 1h ./...
-  - if [[ $TRAVIS_GO_VERSION == 1.9* ]]; then $GOPATH/bin/goveralls -service=travis-ci -ignore="examples/tokens/tokens.go,examples/space/space.go"; fi
+  - go test -v -tags ci ./...
+  - if [[ $TRAVIS_GO_VERSION == 1.10* ]]; then $GOPATH/bin/goveralls -service=travis-ci -ignore="examples/tokens/tokens.go,examples/space/space.go"; fi
 
 notifications:
   email:
