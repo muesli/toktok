@@ -1,6 +1,11 @@
 toktok
 ======
 
+[![Build Status](https://travis-ci.org/muesli/toktok.svg?branch=master)](https://travis-ci.org/muesli/toktok)
+[![Coverage Status](https://coveralls.io/repos/github/muesli/toktok/badge.svg?branch=master)](https://coveralls.io/github/muesli/toktok?branch=master)
+[![Go ReportCard](http://goreportcard.com/badge/muesli/toktok)](http://goreportcard.com/report/muesli/toktok)
+[![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](https://godoc.org/github.com/muesli/toktok)
+
 A human-friendly token generator
 
 Creates tokens which avoid characters that can be easily misinterpreted, like '1' and 'I' or '8' and 'B', as well as
@@ -63,10 +68,3 @@ Generated Token 2: WNANK4FU
 Generated Token 9: Y3NCDFWN
 Best match for '_3NCDFW_' is token 'Y3NCDFWN' with distance 4
 ```
-
-## Development
-
-[![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](https://godoc.org/github.com/muesli/toktok)
-[![Build Status](https://travis-ci.org/muesli/toktok.svg?branch=master)](https://travis-ci.org/muesli/toktok)
-[![Coverage Status](https://coveralls.io/repos/github/muesli/toktok/badge.svg?branch=master)](https://coveralls.io/github/muesli/toktok?branch=master)
-[![Go ReportCard](http://goreportcard.com/badge/muesli/toktok)](http://goreportcard.com/report/muesli/toktok)
