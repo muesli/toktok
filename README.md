@@ -3,7 +3,7 @@ toktok
 
 [![Build Status](https://travis-ci.org/muesli/toktok.svg?branch=master)](https://travis-ci.org/muesli/toktok)
 [![Coverage Status](https://coveralls.io/repos/github/muesli/toktok/badge.svg?branch=master)](https://coveralls.io/github/muesli/toktok?branch=master)
-[![Go ReportCard](http://goreportcard.com/badge/muesli/toktok)](http://goreportcard.com/report/muesli/toktok)
+[![Go ReportCard](https://goreportcard.com/badge/muesli/toktok)](https://goreportcard.com/report/muesli/toktok)
 [![GoDoc](https://godoc.org/github.com/golang/gddo?status.svg)](https://godoc.org/github.com/muesli/toktok)
 
 A human-friendly token generator
@@ -15,7 +15,7 @@ guarantees a safety distance between the tokens, so they become resilient to typ
 ## Installation
 
 Make sure you have a working Go environment (Go 1.5 or higher is required).
-See the [install instructions](http://golang.org/doc/install.html).
+See the [install instructions](https://golang.org/doc/install.html).
 
 To install toktok, simply run:
 
