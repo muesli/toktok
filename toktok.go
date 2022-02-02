@@ -29,7 +29,17 @@ type Bucket struct {
 
 // NewBucket returns a new bucket, which will contain tokens of tokenLength.
 func NewBucket(tokenLength uint) (Bucket, error) {
-	return NewBucketWithRunes(tokenLength, "ACDEFHJKLMNPRSTUWXY3469")
+	// Problematic chars:
+	//  - A and 4
+	//  - B and 8
+	//  - G and 6
+	//  - I and 1
+	//  - O and Q, 0
+	//  - Q and O, 0
+	//  - S and 5
+	//  - U and V
+	//	- Z and 2, 7
+	return NewBucketWithRunes(tokenLength, "ABCDEFHJKLMNPRSTUWXY369")
 }
 
 // NewBucketWithRunes returns a new bucket and lets you define which runes will
