@@ -191,7 +191,7 @@ func GenerateToken(n uint, letterRunes []rune) string {
 		}
 		b[i] = lastrune
 		for lastrune == b[i] {
-			b[i] = letterRunes[rand.Intn(l)]
+			b[i] = letterRunes[rand.Intn(l)] //nolint:gosec
 		}
 	}
 
