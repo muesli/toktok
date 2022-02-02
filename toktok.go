@@ -16,7 +16,7 @@ import (
 	"github.com/xrash/smetrics"
 )
 
-// Bucket tracks all the generated tokens and lets you create new, unique tokens
+// Bucket tracks all the generated tokens and lets you create new, unique tokens.
 type Bucket struct {
 	length uint
 	runes  []rune
@@ -27,12 +27,13 @@ type Bucket struct {
 	sync.RWMutex
 }
 
-// NewBucket returns a new bucket, which will contain tokens of tokenLength
+// NewBucket returns a new bucket, which will contain tokens of tokenLength.
 func NewBucket(tokenLength uint) (Bucket, error) {
 	return NewBucketWithRunes(tokenLength, "ACDEFHJKLMNPRSTUWXY3469")
 }
 
-// NewBucketWithRunes returns a new bucket and let's you define which runes will be used for token generation
+// NewBucketWithRunes returns a new bucket and lets you define which runes will
+// be used for token generation.
 func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	runes = strings.ToUpper(runes)
 	for _, r := range runes {
@@ -55,7 +56,7 @@ func NewBucketWithRunes(tokenLength uint, runes string) (Bucket, error) {
 	}, nil
 }
 
-// LoadTokens adds previously generated tokens to the Bucket
+// LoadTokens adds previously generated tokens to the Bucket.
 func (bucket *Bucket) LoadTokens(tokens []string) {
 	bucket.Lock()
 	defer bucket.Unlock()
@@ -65,7 +66,8 @@ func (bucket *Bucket) LoadTokens(tokens []string) {
 	}
 }
 
-// NewToken returns a new token with a minimal safety distance to all other existing tokens
+// NewToken returns a new token with a minimal safety distance to all other
+// existing tokens.
 func (bucket *Bucket) NewToken(distance int) (string, error) {
 	if distance < 1 {
 		return "", ErrDistanceTooSmall
@@ -89,7 +91,8 @@ func (bucket *Bucket) NewToken(distance int) (string, error) {
 	return c, nil
 }
 
-// Resolve tries to find the matching original token for a potentially corrupted token
+// Resolve tries to find the matching original token for a potentially corrupted
+// token.
 func (bucket *Bucket) Resolve(code string) (string, int) {
 	distance := 65536
 
@@ -120,7 +123,7 @@ func (bucket *Bucket) Resolve(code string) (string, int) {
 	return t, distance
 }
 
-// Count returns how many tokens are currently in this Bucket
+// Count returns how many tokens are currently in this Bucket.
 func (bucket *Bucket) Count() uint64 {
 	bucket.Lock()
 	defer bucket.Unlock()
@@ -128,7 +131,7 @@ func (bucket *Bucket) Count() uint64 {
 	return uint64(len(bucket.tokens))
 }
 
-// EstimatedFillPercentage returns how full the Bucket approximately is
+// EstimatedFillPercentage returns how full the Bucket approximately is.
 func (bucket *Bucket) EstimatedFillPercentage() float64 {
 	bucket.Lock()
 	defer bucket.Unlock()
@@ -145,7 +148,8 @@ func (bucket *Bucket) EstimatedFillPercentage() float64 {
 	return 100.0 - (100.0 / (float64(tries) / float64(len(bucket.tries))))
 }
 
-// EstimatedTokenSpace returns the total estimated token space available in this Bucket
+// EstimatedTokenSpace returns the total estimated token space available in this
+// Bucket.
 func (bucket *Bucket) EstimatedTokenSpace() uint64 {
 	return uint64(float64(bucket.Count()) * (100.0 / bucket.EstimatedFillPercentage()))
 }
@@ -179,7 +183,8 @@ func (bucket *Bucket) generate(distance int) (string, int, error) {
 	return c, i, nil
 }
 
-// GenerateToken generates a new token of length n with the defined rune-set letterRunes
+// GenerateToken generates a new token of length n with the defined rune-set
+// letterRunes.
 func GenerateToken(n uint, letterRunes []rune) string {
 	l := len(letterRunes)
 	b := make([]rune, n)
