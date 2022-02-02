@@ -1,6 +1,6 @@
 /*
  * Human-friendly token generator
- *     Copyright (c) 2017, Christian Muehlhaeuser <muesli@gmail.com>
+ *     Copyright (c) 2017-2022, Christian Muehlhaeuser <muesli@gmail.com>
  *
  *   For license see LICENSE
  */
