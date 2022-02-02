@@ -1,6 +1,7 @@
 toktok
 ======
 
+[![Latest Release](https://img.shields.io/github/release/muesli/toktok.svg)](https://github.com/muesli/toktok/releases)
 [![Build Status](https://travis-ci.org/muesli/toktok.svg?branch=master)](https://travis-ci.org/muesli/toktok)
 [![Coverage Status](https://coveralls.io/repos/github/muesli/toktok/badge.svg?branch=master)](https://coveralls.io/github/muesli/toktok?branch=master)
 [![Go ReportCard](https://goreportcard.com/badge/muesli/toktok)](https://goreportcard.com/report/muesli/toktok)
@@ -14,17 +15,17 @@ guarantees a safety distance between the tokens, so they become resilient to typ
 
 ## Installation
 
-Make sure you have a working Go environment (Go 1.5 or higher is required).
+Make sure you have a working Go environment (Go 1.11 or higher is required).
 See the [install instructions](https://golang.org/doc/install.html).
 
 To install toktok, simply run:
 
     go get github.com/muesli/toktok
 
-To compile it from source:
+Compiling toktok is easy, simply run:
 
-    cd $GOPATH/src/github.com/muesli/toktok
-    go get -u -v
+    git clone https://github.com/muesli/toktok.git
+    cd toktok
     go build && go test -v
 
 ## Example
@@ -68,3 +69,10 @@ Generated Token 2: WNANK4FU
 Generated Token 9: Y3NCDFWN
 Best match for '_3NCDFW_' is token 'Y3NCDFWN' with distance 4
 ```
+
+## Feedback
+
+Got some feedback or suggestions? Please open an issue or drop me a note!
+
+* [Twitter](https://twitter.com/mueslix)
+* [The Fediverse](https://mastodon.social/@fribbledom)
